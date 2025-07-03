@@ -9,14 +9,13 @@ import { MovieData } from '../../types/MovieData';
 import { getMovie } from '../../api';
 
 import { MovieCard } from '../MovieCard';
-import { MoviesList } from '../MoviesList';
 
 type FindMovieProps = {
   movies: Movie[];
   setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
 };
 
-export const FindMovie: React.FC<FindMovieProps> = ({ movies, setMovies }) => {
+export const FindMovie: React.FC<FindMovieProps> = ({ setMovies }) => {
   const [title, setTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,6 +33,18 @@ export const FindMovie: React.FC<FindMovieProps> = ({ movies, setMovies }) => {
       imdbId: data.imdbID,
     };
   };
+
+  function addToTheList(newMovie: Movie) {
+    setMovies(prev => {
+      const alreadyAdd = prev.some(mov => mov.imdbId === newMovie.imdbId);
+
+      if (alreadyAdd) {
+        return prev;
+      }
+
+      return [...prev, newMovie];
+    });
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -61,14 +72,7 @@ export const FindMovie: React.FC<FindMovieProps> = ({ movies, setMovies }) => {
       return;
     }
 
-    if (movies.some((film: Movie) => film.imdbId === movie.imdbId)) {
-      setMovie(null);
-      setTitle('');
-
-      return;
-    }
-
-    setMovies([...movies, movie]);
+    addToTheList(movie);
     setMovie(null);
     setTitle('');
   };
@@ -131,8 +135,6 @@ export const FindMovie: React.FC<FindMovieProps> = ({ movies, setMovies }) => {
           </button>
         </div>
       )}
-
-      <MoviesList movies={movies} />
     </>
   );
 };
