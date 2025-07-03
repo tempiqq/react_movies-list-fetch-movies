@@ -11,13 +11,16 @@ import { getMovie } from '../../api';
 import { MovieCard } from '../MovieCard';
 import { MoviesList } from '../MoviesList';
 
-export const FindMovie: React.FC = () => {
+type FindMovieProps = {
+  movies: Movie[];
+  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
+};
+
+export const FindMovie: React.FC<FindMovieProps> = ({ movies, setMovies }) => {
   const [title, setTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [movie, setMovie] = useState<Movie | null>(null);
-
-  const [movies, setMovies] = useState<Movie[]>([]);
 
   const normalizedMovie = (data: MovieData): Movie => {
     return {
@@ -58,7 +61,7 @@ export const FindMovie: React.FC = () => {
       return;
     }
 
-    if (movies.some(film => film.imdbId === movie.imdbId)) {
+    if (movies.some((film: Movie) => film.imdbId === movie.imdbId)) {
       setMovie(null);
       setTitle('');
 
@@ -110,18 +113,6 @@ export const FindMovie: React.FC = () => {
             >
               Find a movie
             </button>
-          </div>
-
-          <div className="control">
-            {/* <button
-              data-cy="addButton"
-              type="button"
-              className="button is-primary"
-              disabled={!movie}
-              onClick={handleAddMovie}
-            >
-              Add to the list
-            </button> */}
           </div>
         </div>
       </form>
