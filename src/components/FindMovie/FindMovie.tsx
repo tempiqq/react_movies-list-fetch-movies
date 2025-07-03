@@ -11,7 +11,6 @@ import { getMovie } from '../../api';
 import { MovieCard } from '../MovieCard';
 
 type FindMovieProps = {
-  movies: Movie[];
   setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
 };
 
